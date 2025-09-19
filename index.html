@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MusicID - Identify Any Song</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .main-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            margin-bottom: 30px;
+        }
+        
+        .recording-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .record-button {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #ff6b6b, #ff8787);
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+        
+        .record-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(255, 107, 107, 0.5);
+        }
+        
+        .record-button.recording {
+            background: linear-gradient(135deg, #ff4757, #c44569);
+            animation: pulse 1.5s infinite;
+        }
+        
+        .record-button.processing {
+            background: linear-gradient(135deg, #5352ed, #3742fa);
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4); }
+            50% { box-shadow: 0 8px 25px rgba(255, 107, 107, 0.8); }
+            100% { box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4); }
+        }
+        
+        .status {
+            font-size: 1.1rem;
+            margin: 20px 0;
+            min-height: 30px;
+            color: #666;
+        }
+        
+        .audio-visualizer {
+            display: none;
+            width: 300px;
+            height: 60px;
+            margin: 20px auto;
+            background: #f8f9fa;
+            border-radius: 30px;
+            padding: 10px;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .bar {
+            width: 4px;
+            background: linear-gradient(to top, #667eea, #764ba2);
+            margin: 0 2px;
+            border-radius: 2px;
+            animation: audioWave 0.5s infinite alternate;
+        }
+        
+        @keyframes audioWave {
+            0% { height: 10px; }
+            100% { height: 40px; }
+        }
+        
+        .upload-section {
+            border-top: 2px dashed #e9ecef;
+            padding-top: 30px;
+            margin-top: 30px;
+        }
+        
+        .upload-area {
+            border: 3px dashed #ced4da;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-area:hover {
+            border-color: #667eea;
+            background: #f1f3f4;
+        }
+        
+        .upload-area.dragover {
+            border-color: #667eea;
+            background: #e3f2fd;
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .results {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: none;
+        }
+        
+        .song-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .album-art {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+        }
+        
+        .song-details h3 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .song-details p {
+            color: #666;
+            margin-bottom: 3px;
+        }
+        
+        .match-confidence {
+            background: linear-gradient(135deg, #00b894, #00cec9);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .spotify { background: #1DB954; color: white; }
+        .youtube { background: #FF0000; color: white; }
+        .apple { background: #000; color: white; }
+        .lyrics { background: #667eea; color: white; }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .history {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .history h3 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .history-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .history-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .history-item:last-child {
+            border-bottom: none;
+        }
+        
+        .history-art {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .tips-panel, .troubleshooting-panel {
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .tips-panel h4, .troubleshooting-panel h4 {
+            color: #1976d2;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .tips-panel ul, .troubleshooting-panel ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .tips-panel li, .troubleshooting-panel li {
+            margin-bottom: 8px;
+            color: #333;
+        }
+        
+        .permission-button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+            transition: background 0.3s;
+        }
+        
+        .permission-button:hover {
+            background: #45a049;
+        }
+        
+        .browser-info {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .close-panel {
+            float: right;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .error-message {
+            display: none;
+            background: #ffebee;
+            border: 1px solid #f44336;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .main-card {
+                padding: 25px;
+            }
+            
+            .song-info {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .actions {
+                justify-content: center;
+            }
+        }
+    </style>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1963312301212654"
+     crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎵 MusicID</h1>
+            <p>Identify any song in seconds - Record, upload, or hum to discover music</p>
+        </div>
+        
+        <div class="main-card">
+            <div class="recording-section">
+                <button class="record-button" id="recordBtn">
+                    🎤 Start Recording
+                </button>
+                <div class="status" id="status">Click to start recording audio</div>
+                <div class="audio-visualizer" id="visualizer"></div>
+                <div class="error-message" id="errorMsg"></div>
+                
+                <div class="tips-panel" id="tipsPanel">
+                    <button class="close-panel" onclick="this.parentElement.style.display='none'">×</button>
+                    <h4>🎵 Recording Tips for Best Results</h4>
+                    <ul>
+                        <li><strong>Volume:</strong> Play music loudly and clearly near your microphone</li>
+                        <li><strong>Positioning:</strong> Hold device close to the audio source</li>
+                        <li><strong>Duration:</strong> Record for at least 10-15 seconds</li>
+                        <li><strong>Environment:</strong> Minimize background noise and talking</li>
+                        <li><strong>Quality:</strong> Use the clearest part of the song (chorus works best)</li>
+                    </ul>
+                </div>
+                
+                <div class="troubleshooting-panel" id="troubleshootingPanel">
+                    <button class="close-panel" onclick="this.parentElement.style.display='none'">×</button>
+                    <h4>🔧 Microphone Troubleshooting</h4>
+                    <div class="browser-info">
+                        <strong>💡 Quick Fixes:</strong>
+                        <ul>
+                            <li>Click the <strong>🔒 lock icon</strong> in your browser's address bar</li>
+                            <li>Select "Allow" for microphone permissions</li>
+                            <li>Refresh the page after granting permissions</li>
+                        </ul>
+                    </div>
+                    <ul>
+                        <li><strong>Chrome:</strong> Settings → Privacy & Security → Site Settings → Microphone</li>
+                        <li><strong>Firefox:</strong> Click shield icon → Permissions → Microphone → Allow</li>
+                        <li><strong>Safari:</strong> Settings → Websites → Microphone → Allow</li>
+                        <li><strong>Edge:</strong> Settings → Site permissions → Microphone</li>
+                    </ul>
+                    <button class="permission-button" onclick="window.location.reload()">🔄 Refresh Page</button>
+                    <button class="permission-button" onclick="navigator.mediaDevices.getUserMedia({audio: true}).then(() => alert('Microphone access granted!')).catch(() => alert('Please allow microphone access'))">🎤 Test Microphone</button>
+                </div>
+            </div>
+            
+            <div class="upload-section">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📁</div>
+                    <h3>Upload Audio File</h3>
+                    <p>Drop your audio file here or click to browse</p>
+                    <p><small>Supported: MP3, WAV, M4A, OGG</small></p>
+                    <input type="file" class="file-input" id="fileInput" accept="audio/*">
+                </div>
+            </div>
+        </div>
+        
+        <div class="results" id="results">
+            <h2>🎯 Song Identified!</h2>
+            <div class="song-info">
+                <div class="album-art" id="albumArt">♪</div>
+                <div class="song-details">
+                    <h3 id="songTitle">Song Title</h3>
+                    <p><strong>Artist:</strong> <span id="artist">Artist Name</span></p>
+                    <p><strong>Album:</strong> <span id="album">Album Name</span></p>
+                    <p><strong>Year:</strong> <span id="year">2024</span></p>
+                    <div class="match-confidence" id="confidence">95% Match</div>
+                </div>
+            </div>
+            
+            <div class="actions">
+                <a href="#" class="action-btn spotify" id="spotifyLink">🎵 Spotify</a>
+                <a href="#" class="action-btn youtube" id="youtubeLink">📺 YouTube</a>
+                <a href="#" class="action-btn apple" id="appleLink">🍎 Apple Music</a>
+                <a href="#" class="action-btn lyrics" id="lyricsLink">📝 Lyrics</a>
+            </div>
+        </div>
+        
+        <div class="history">
+            <h3>🕒 Recent Identifications</h3>
+            <div id="historyList">
+                <div class="history-item">
+                    <div class="history-art">♪</div>
+                    <div>
+                        <strong>Shape of You</strong><br>
+                        <small>Ed Sheeran • ÷ (Divide)</small>
+                    </div>
+                </div>
+                <div class="history-item">
+                    <div class="history-art">♫</div>
+                    <div>
+                        <strong>Blinding Lights</strong><br>
+                        <small>The Weeknd • After Hours</small>
+                    </div>
+                </div>
+                <div class="history-item">
+                    <div class="history-art">🎵</div>
+                    <div>
+                        <strong>Bad Guy</strong><br>
+                        <small>Billie Eilish • When We All Fall Asleep</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class MusicIdentifier {
+            constructor() {
+                this.isRecording = false;
+                this.mediaRecorder = null;
+                this.recordedChunks = [];
+                this.recordingTimeout = null;
+                
+                // Using Netlify Functions - API keys are now secure on the server
+                this.backendUrl = '/.netlify/functions/identify';
+                
+                this.initializeElements();
+                this.setupEventListeners();
+                this.createVisualizer();
+            }
+            
+            initializeElements() {
+                this.recordBtn = document.getElementById('recordBtn');
+                this.status = document.getElementById('status');
+                this.visualizer = document.getElementById('visualizer');
+                this.uploadArea = document.getElementById('uploadArea');
+                this.fileInput = document.getElementById('fileInput');
+                this.results = document.getElementById('results');
+                this.errorMsg = document.getElementById('errorMsg');
+            }
+            
+            setupEventListeners() {
+                this.recordBtn.addEventListener('click', () => this.toggleRecording());
+                
+                this.uploadArea.addEventListener('click', () => this.fileInput.click());
+                this.uploadArea.addEventListener('dragover', this.handleDragOver.bind(this));
+                this.uploadArea.addEventListener('dragleave', this.handleDragLeave.bind(this));
+                this.uploadArea.addEventListener('drop', this.handleDrop.bind(this));
+                
+                this.fileInput.addEventListener('change', this.handleFileSelect.bind(this));
+            }
+            
+            createVisualizer() {
+                for (let i = 0; i < 20; i++) {
+                    const bar = document.createElement('div');
+                    bar.className = 'bar';
+                    bar.style.height = '10px';
+                    bar.style.animationDelay = `${i * 0.1}s`;
+                    this.visualizer.appendChild(bar);
+                }
+            }
+            
+            async toggleRecording() {
+                if (!this.isRecording) {
+                    await this.startRecording();
+                } else {
+                    this.stopRecording();
+                }
+            }
+            
+            async startRecording() {
+                try {
+                    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                        throw new Error('Your browser does not support audio recording. Please use a modern browser like Chrome, Firefox, or Safari.');
+                    }
+                    
+                    this.status.textContent = 'Requesting microphone access...';
+                    
+                    const constraints = [
+                        { 
+                            audio: { 
+                                echoCancellation: false,
+                                noiseSuppression: false,
+                                autoGainControl: false,
+                                sampleRate: 44100,
+                                channelCount: 1
+                            } 
+                        },
+                        { 
+                            audio: { 
+                                echoCancellation: true,
+                                noiseSuppression: true,
+                                sampleRate: 44100 
+                            } 
+                        },
+                        { audio: true }
+                    ];
+                    
+                    let stream = null;
+                    let constraintIndex = 0;
+                    
+                    while (!stream && constraintIndex < constraints.length) {
+                        try {
+                            stream = await navigator.mediaDevices.getUserMedia(constraints[constraintIndex]);
+                        } catch (err) {
+                            constraintIndex++;
+                            if (constraintIndex >= constraints.length) {
+                                throw err;
+                            }
+                        }
+                    }
+                    
+                    this.mediaRecorder = new MediaRecorder(stream);
+                    this.recordedChunks = [];
+                    
+                    this.mediaRecorder.ondataavailable = (event) => {
+                        if (event.data.size > 0) {
+                            this.recordedChunks.push(event.data);
+                        }
+                    };
+                    
+                    this.mediaRecorder.onstop = () => this.processRecording();
+                    
+                    this.mediaRecorder.start();
+                    this.isRecording = true;
+                    
+                    this.recordBtn.textContent = '⏹️ Stop Recording';
+                    this.recordBtn.className = 'record-button recording';
+                    this.status.textContent = '🎵 Recording... Play your music loudly near the microphone';
+                    this.visualizer.style.display = 'flex';
+                    this.hideError();
+                    
+                    this.showRecordingTips();
+                    
+                    this.recordingTimeout = setTimeout(() => {
+                        if (this.isRecording) {
+                            this.stopRecording();
+                        }
+                    }, 30000);
+                    
+                } catch (error) {
+                    let errorMessage = 'Could not access microphone. ';
+                    
+                    if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
+                        errorMessage += 'Please allow microphone access and try again. Check your browser settings or the lock icon in the address bar.';
+                    } else if (error.name === 'NotFoundError' || error.name === 'DeviceNotFoundError') {
+                        errorMessage += 'No microphone found. Please connect a microphone and refresh the page.';
+                    } else if (error.name === 'NotReadableError' || error.name === 'TrackStartError') {
+                        errorMessage += 'Microphone is being used by another application. Please close other apps and try again.';
+                    } else {
+                        errorMessage += error.message || 'Please check your microphone settings and try uploading a file instead.';
+                    }
+                    
+                    this.showError(errorMessage);
+                    this.showMicrophoneTroubleshooting();
+                }
+            }
+            
+            stopRecording() {
+                if (this.mediaRecorder && this.isRecording) {
+                    this.mediaRecorder.stop();
+                    this.mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                    this.isRecording = false;
+                    
+                    this.recordBtn.textContent = '🔄 Processing...';
+                    this.recordBtn.className = 'record-button processing';
+                    this.status.textContent = 'Processing audio...';
+                    this.visualizer.style.display = 'none';
+                    
+                    if (this.recordingTimeout) {
+                        clearTimeout(this.recordingTimeout);
+                    }
+                }
+            }
+            
+            processRecording() {
+                const blob = new Blob(this.recordedChunks, { type: 'audio/wav' });
+                this.identifyAudio(blob, 'recording');
+            }
+            
+            handleDragOver(e) {
+                e.preventDefault();
+                this.uploadArea.classList.add('dragover');
+            }
+            
+            handleDragLeave(e) {
+                e.preventDefault();
+                this.uploadArea.classList.remove('dragover');
+            }
+            
+            handleDrop(e) {
+                e.preventDefault();
+                this.uploadArea.classList.remove('dragover');
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    this.processFile(files[0]);
+                }
+            }
+            
+            handleFileSelect(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    this.processFile(file);
+                }
+            }
+            
+            processFile(file) {
+                if (!file.type.startsWith('audio/')) {
+                    this.showError('Please select a valid audio file.');
+                    return;
+                }
+                
+                if (file.size > 10 * 1024 * 1024) {
+                    this.showError('File size must be less than 10MB.');
+                    return;
+                }
+                
+                this.identifyAudio(file, 'upload');
+            }
+            
+            async identifyAudio(audioData, source) {
+                try {
+                    this.status.textContent = 'Analyzing audio fingerprint...';
+                    this.hideError();
+                    
+                    let result = await this.identifyWithNetlifyFunction(audioData);
+                    
+                    if (!result) {
+                        this.status.textContent = 'Song not found in database - showing demo results...';
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                        result = this.getMockResult();
+                    }
+                    
+                    this.showResults(result);
+                    this.addToHistory(result);
+                    
+                } catch (error) {
+                    console.error('Identification error:', error);
+                    this.showError(`Failed to identify the song: ${error.message}`);
+                    
+                    // Show demo result as fallback
+                    this.status.textContent = 'Showing demo result due to error...';
+                    const demoResult = this.getMockResult();
+                    this.showResults(demoResult);
+                    this.addToHistory(demoResult);
+                } finally {
+                    this.resetRecordButton();
+                }
+            }
+            
+            async identifyWithNetlifyFunction(audioData) {
+                try {
+                    console.log('Starting Netlify Function identification...');
+                    this.status.textContent = 'Connecting to music identification service...';
+                    
+                    let audioFile;
+                    if (audioData instanceof File) {
+                        audioFile = audioData;
+                    } else if (audioData instanceof Blob) {
+                        audioFile = new File([audioData], 'audio.wav', { 
+                            type: audioData.type || 'audio/wav' 
+                        });
+                    } else {
+                        throw new Error('Invalid audio data format');
+                    }
+                    
+                    console.log('Audio file prepared:', {
+                        name: audioFile.name,
+                        size: audioFile.size,
+                        type: audioFile.type
+                    });
+                    
+                    const formData = new FormData();
+                    formData.append('audio', audioFile);
+                    
+                    this.status.textContent = 'Identifying song...';
+                    
+                    console.log('Making request to Netlify Function:', this.backendUrl);
+                    
+                    const response = await fetch(this.backendUrl, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    console.log('Response status:', response.status);
+                    console.log('Response ok:', response.ok);
+                    
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({}));
+                        console.error('Netlify Function Error:', errorData);
+                        throw new Error(errorData.error || `Server error: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    console.log('Netlify Function Response:', data);
+                    
+                    if (data.success && data.song) {
+                        return data.song;
+                    } else if (data.error) {
+                        if (data.code === 1001) {
+                            // No music found
+                            return null;
+                        } else {
+                            throw new Error(data.error);
+                        }
+                    }
+                    
+                    return null;
+                    
+                } catch (error) {
+                    console.error('Netlify Function identification failed:', error);
+                    
+                    if (error.message.includes('Failed to fetch') || error.name === 'TypeError') {
+                        throw new Error('Cannot connect to music identification service. Please try again.');
+                    }
+                    
+                    throw error;
+                }
+            }
+            
+            getMockResult() {
+                const mockResults = [
+                    {
+                        title: "As It Was",
+                        artist: "Harry Styles",
+                        album: "Harry's House",
+                        year: "2022",
+                        confidence: 94,
+                        duration: 167,
+                        isReal: false
+                    },
+                    {
+                        title: "Heat Waves",
+                        artist: "Glass Animals",
+                        album: "Dreamland",
+                        year: "2020",
+                        confidence: 87,
+                        duration: 238,
+                        isReal: false
+                    },
+                    {
+                        title: "Stay",
+                        artist: "The Kid LAROI & Justin Bieber",
+                        album: "F*CK LOVE 3: OVER YOU",
+                        year: "2021",
+                        confidence: 91,
+                        duration: 141,
+                        isReal: false
+                    },
+                    {
+                        title: "Anti-Hero",
+                        artist: "Taylor Swift",
+                        album: "Midnights",
+                        year: "2022",
+                        confidence: 96,
+                        duration: 200,
+                        isReal: false
+                    },
+                    {
+                        title: "Flowers",
+                        artist: "Miley Cyrus",
+                        album: "Endless Summer Vacation",
+                        year: "2023",
+                        confidence: 89,
+                        duration: 200,
+                        isReal: false
+                    }
+                ];
+                
+                return mockResults[Math.floor(Math.random() * mockResults.length)];
+            }
+            
+            showResults(song) {
+                document.getElementById('songTitle').textContent = song.title;
+                document.getElementById('artist').textContent = song.artist;
+                document.getElementById('album').textContent = song.album;
+                document.getElementById('year').textContent = song.year;
+                
+                const confidenceEl = document.getElementById('confidence');
+                confidenceEl.textContent = `${song.confidence}% Match`;
+                
+                if (song.isReal === false) {
+                    confidenceEl.textContent += ' (Demo)';
+                    confidenceEl.style.background = 'linear-gradient(135deg, #ff9800, #ff5722)';
+                } else {
+                    confidenceEl.style.background = 'linear-gradient(135deg, #00b894, #00cec9)';
+                }
+                
+                const spotifyLink = document.getElementById('spotifyLink');
+                const youtubeLink = document.getElementById('youtubeLink');
+                const appleLink = document.getElementById('appleLink');
+                const lyricsLink = document.getElementById('lyricsLink');
+                
+                if (song.spotify_url) {
+                    spotifyLink.href = song.spotify_url;
+                } else {
+                    spotifyLink.href = `https://open.spotify.com/search/${encodeURIComponent(song.title + ' ' + song.artist)}`;
+                }
+                
+                if (song.youtube_url) {
+                    youtubeLink.href = song.youtube_url;
+                } else {
+                    youtubeLink.href = `https://www.youtube.com/results?search_query=${encodeURIComponent(song.title + ' ' + song.artist)}`;
+                }
+                
+                appleLink.href = `https://music.apple.com/search?term=${encodeURIComponent(song.title + ' ' + song.artist)}`;
+                lyricsLink.href = `https://genius.com/search?q=${encodeURIComponent(song.title + ' ' + song.artist)}`;
+                
+                if (song.duration) {
+                    const minutes = Math.floor(song.duration / 60);
+                    const seconds = song.duration % 60;
+                    const albumEl = document.getElementById('album');
+                    if (!document.querySelector('.duration-info')) {
+                        const durationEl = document.createElement('p');
+                        durationEl.className = 'duration-info';
+                        durationEl.innerHTML = `<strong>Duration:</strong> ${minutes}:${seconds.toString().padStart(2, '0')}`;
+                        albumEl.parentElement.appendChild(durationEl);
+                    }
+                }
+                
+                this.results.style.display = 'block';
+                this.results.scrollIntoView({ behavior: 'smooth' });
+                
+                if (song.isReal === false) {
+                    this.status.textContent = 'Showing demo result - Configure Netlify Functions for real identification!';
+                } else {
+                    this.status.textContent = 'Song identified successfully!';
+                }
+            }
+            
+            addToHistory(song) {
+                const historyList = document.getElementById('historyList');
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                historyItem.innerHTML = `
+                    <div class="history-art">♪</div>
+                    <div>
+                        <strong>${song.title}</strong><br>
+                        <small>${song.artist} • ${song.album}</small>
+                    </div>
+                `;
+                historyList.insertBefore(historyItem, historyList.firstChild);
+                
+                while (historyList.children.length > 5) {
+                    historyList.removeChild(historyList.lastChild);
+                }
+            }
+            
+            resetRecordButton() {
+                this.recordBtn.textContent = '🎤 Start Recording';
+                this.recordBtn.className = 'record-button';
+                this.isRecording = false;
+            }
+            
+            showError(message) {
+                this.errorMsg.textContent = message;
+                this.errorMsg.style.display = 'block';
+            }
+            
+            showRecordingTips() {
+                document.getElementById('tipsPanel').style.display = 'block';
+            }
+            
+            showMicrophoneTroubleshooting() {
+                document.getElementById('troubleshootingPanel').style.display = 'block';
+            }
+            
+            hideError() {
+                this.errorMsg.style.display = 'none';
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            new MusicIdentifier();
+        });
+    </script>
+</body>
+</html>
