@@ -3,7 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MusicID - Identify Any Song</title>
+    
+    <!-- Primary SEO Meta Tags -->
+    <title>Songlify - Free Song Identifier | Find Any Song by Sound, Humming or Upload</title>
+    <meta name="description" content="Identify any song in seconds! Upload audio files or record live music. Free online song finder that works like Shazam. Discover music, artists, and lyrics instantly.">
+    <meta name="keywords" content="song identifier, music identifier, what song is this, find song by sound, song finder online, music recognition, identify music, song recognition online, find song by humming, audio recognition">
+    <meta name="author" content="Songlify">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://songlify.lol">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Songlify - Free Online Song Identifier">
+    <meta property="og:description" content="Find any song instantly by recording, uploading, or humming. Free music recognition tool that works like Shazam in your browser.">
+    <meta property="og:image" content="https://songlify.lol/og-image.jpg">
+    <meta property="og:url" content="https://songlify.lol">
+    <meta property="og:site_name" content="Songlify">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Songlify - Free Song Identifier">
+    <meta name="twitter:description" content="Identify any song in seconds! Free online music recognition tool.">
+    <meta name="twitter:image" content="https://songlify.lol/twitter-image.jpg">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    
+    <!-- Structured Data / Schema.org -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Songlify",
+      "description": "Free online song identifier and music recognition tool that helps users identify songs by recording audio, uploading files, or humming melodies",
+      "url": "https://songlify.lol",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Web Browser",
+      "browserRequirements": "Requires JavaScript. Works with Chrome, Firefox, Safari, Edge.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "Audio recording and identification",
+        "File upload support (MP3, WAV, M4A, OGG)",
+        "Real-time song recognition",
+        "Music streaming service integration",
+        "Song history tracking"
+      ],
+      "creator": {
+        "@type": "Organization",
+        "name": "Songlify"
+      }
+    }
+    </script>
+    
     <style>
         * {
             margin: 0;
@@ -39,6 +95,53 @@
         .header p {
             font-size: 1.2rem;
             opacity: 0.9;
+        }
+        
+        /* SEO Content Section */
+        .seo-intro {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .seo-intro h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+        
+        .seo-intro p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .feature-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .feature-item h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .feature-item p {
+            color: #666;
+            font-size: 0.9rem;
         }
         
         .main-card {
@@ -350,12 +453,66 @@
             margin: 15px 0;
         }
         
+        /* SEO Footer */
+        .seo-footer {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .seo-footer h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+        }
+        
+        .seo-footer h3 {
+            color: #667eea;
+            margin: 20px 0 10px 0;
+            font-size: 1.3rem;
+        }
+        
+        .seo-footer p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .comparison-table th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .comparison-table tr:hover {
+            background: #f8f9fa;
+        }
+        
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 2rem;
             }
             
-            .main-card {
+            .main-card, .seo-intro, .seo-footer {
                 padding: 25px;
             }
             
@@ -367,6 +524,14 @@
             .actions {
                 justify-content: center;
             }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-table {
+                font-size: 0.9rem;
+            }
         }
     </style>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1963312301212654"
@@ -374,23 +539,48 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>🎵 MusicID</h1>
-            <p>Identify any song in seconds - Record, upload, or hum to discover music</p>
-        </div>
+        <header class="header">
+            <h1>🎵 Songlify</h1>
+            <p>Free Song Identifier - Find Any Song by Sound, Humming or Upload</p>
+        </header>
         
-        <div class="main-card">
-            <div class="recording-section">
-                <button class="record-button" id="recordBtn">
+        <!-- SEO Content Section -->
+        <section class="seo-intro">
+            <h2>Identify Any Song Instantly - Free Online Music Recognition</h2>
+            <p>Can't remember that catchy tune stuck in your head? <strong>Songlify</strong> is your go-to <strong>free song identifier</strong> that works just like Shazam, but right in your browser - no app download required! Whether you want to <strong>find a song by sound</strong>, upload an audio file, or even hum a melody, our advanced music recognition technology will help you discover the song title, artist, and album in seconds.</p>
+            
+            <div class="features-grid">
+                <div class="feature-item">
+                    <h3>🎤 Live Recording</h3>
+                    <p>Record music playing around you with your device's microphone</p>
+                </div>
+                <div class="feature-item">
+                    <h3>📁 File Upload</h3>
+                    <p>Upload MP3, WAV, M4A, and OGG audio files directly</p>
+                </div>
+                <div class="feature-item">
+                    <h3>🔗 Instant Links</h3>
+                    <p>Get direct links to Spotify, YouTube, Apple Music, and lyrics</p>
+                </div>
+                <div class="feature-item">
+                    <h3>📱 Works Everywhere</h3>
+                    <p>Compatible with all modern browsers on desktop and mobile</p>
+                </div>
+            </div>
+        </section>
+        
+        <main class="main-card">
+            <section class="recording-section">
+                <button class="record-button" id="recordBtn" aria-label="Start recording audio to identify song">
                     🎤 Start Recording
                 </button>
-                <div class="status" id="status">Click to start recording audio</div>
-                <div class="audio-visualizer" id="visualizer"></div>
-                <div class="error-message" id="errorMsg"></div>
+                <div class="status" id="status">Click to start recording audio for song identification</div>
+                <div class="audio-visualizer" id="visualizer" aria-hidden="true"></div>
+                <div class="error-message" id="errorMsg" role="alert"></div>
                 
                 <div class="tips-panel" id="tipsPanel">
-                    <button class="close-panel" onclick="this.parentElement.style.display='none'">×</button>
-                    <h4>🎵 Recording Tips for Best Results</h4>
+                    <button class="close-panel" onclick="this.parentElement.style.display='none'" aria-label="Close tips panel">×</button>
+                    <h4>🎵 Recording Tips for Best Song Recognition Results</h4>
                     <ul>
                         <li><strong>Volume:</strong> Play music loudly and clearly near your microphone</li>
                         <li><strong>Positioning:</strong> Hold device close to the audio source</li>
@@ -401,7 +591,7 @@
                 </div>
                 
                 <div class="troubleshooting-panel" id="troubleshootingPanel">
-                    <button class="close-panel" onclick="this.parentElement.style.display='none'">×</button>
+                    <button class="close-panel" onclick="this.parentElement.style.display='none'" aria-label="Close troubleshooting panel">×</button>
                     <h4>🔧 Microphone Troubleshooting</h4>
                     <div class="browser-info">
                         <strong>💡 Quick Fixes:</strong>
@@ -420,23 +610,23 @@
                     <button class="permission-button" onclick="window.location.reload()">🔄 Refresh Page</button>
                     <button class="permission-button" onclick="navigator.mediaDevices.getUserMedia({audio: true}).then(() => alert('Microphone access granted!')).catch(() => alert('Please allow microphone access'))">🎤 Test Microphone</button>
                 </div>
-            </div>
+            </section>
             
-            <div class="upload-section">
+            <section class="upload-section">
                 <div class="upload-area" id="uploadArea">
                     <div class="upload-icon">📁</div>
-                    <h3>Upload Audio File</h3>
+                    <h3>Upload Audio File for Song Identification</h3>
                     <p>Drop your audio file here or click to browse</p>
-                    <p><small>Supported: MP3, WAV, M4A, OGG</small></p>
-                    <input type="file" class="file-input" id="fileInput" accept="audio/*">
+                    <p><small>Supported formats: MP3, WAV, M4A, OGG (Max 10MB)</small></p>
+                    <input type="file" class="file-input" id="fileInput" accept="audio/*" aria-label="Choose audio file to identify">
                 </div>
-            </div>
-        </div>
+            </section>
+        </main>
         
-        <div class="results" id="results">
+        <section class="results" id="results" role="region" aria-label="Song identification results">
             <h2>🎯 Song Identified!</h2>
             <div class="song-info">
-                <div class="album-art" id="albumArt">♪</div>
+                <div class="album-art" id="albumArt" aria-hidden="true">♪</div>
                 <div class="song-details">
                     <h3 id="songTitle">Song Title</h3>
                     <p><strong>Artist:</strong> <span id="artist">Artist Name</span></p>
@@ -446,40 +636,100 @@
                 </div>
             </div>
             
-            <div class="actions">
-                <a href="#" class="action-btn spotify" id="spotifyLink">🎵 Spotify</a>
-                <a href="#" class="action-btn youtube" id="youtubeLink">📺 YouTube</a>
-                <a href="#" class="action-btn apple" id="appleLink">🍎 Apple Music</a>
-                <a href="#" class="action-btn lyrics" id="lyricsLink">📝 Lyrics</a>
-            </div>
-        </div>
+            <nav class="actions" aria-label="Music streaming services">
+                <a href="#" class="action-btn spotify" id="spotifyLink" target="_blank" rel="noopener">🎵 Listen on Spotify</a>
+                <a href="#" class="action-btn youtube" id="youtubeLink" target="_blank" rel="noopener">📺 Watch on YouTube</a>
+                <a href="#" class="action-btn apple" id="appleLink" target="_blank" rel="noopener">🎧 Apple Music</a>
+                <a href="#" class="action-btn lyrics" id="lyricsLink" target="_blank" rel="noopener">📝 View Lyrics</a>
+            </nav>
+        </section>
         
-        <div class="history">
-            <h3>🕒 Recent Identifications</h3>
-            <div id="historyList">
-                <div class="history-item">
-                    <div class="history-art">♪</div>
+        <aside class="history">
+            <h3>🕒 Recent Song Identifications</h3>
+            <div id="historyList" role="list">
+                <div class="history-item" role="listitem">
+                    <div class="history-art" aria-hidden="true">♪</div>
                     <div>
                         <strong>Shape of You</strong><br>
                         <small>Ed Sheeran • ÷ (Divide)</small>
                     </div>
                 </div>
-                <div class="history-item">
-                    <div class="history-art">♫</div>
+                <div class="history-item" role="listitem">
+                    <div class="history-art" aria-hidden="true">♫</div>
                     <div>
                         <strong>Blinding Lights</strong><br>
                         <small>The Weeknd • After Hours</small>
                     </div>
                 </div>
-                <div class="history-item">
-                    <div class="history-art">🎵</div>
+                <div class="history-item" role="listitem">
+                    <div class="history-art" aria-hidden="true">🎵</div>
                     <div>
                         <strong>Bad Guy</strong><br>
                         <small>Billie Eilish • When We All Fall Asleep</small>
                     </div>
                 </div>
             </div>
-        </div>
+        </aside>
+        
+        <!-- SEO Footer Content -->
+        <footer class="seo-footer">
+            <h2>Why Choose Songlify as Your Music Identifier?</h2>
+            
+            <h3>🚀 Fast & Accurate Song Recognition</h3>
+            <p>Songlify uses advanced audio fingerprinting technology to identify songs with high accuracy. Our <strong>music recognition system</strong> can identify tracks from just a few seconds of audio, making it perfect for those "what song is this?" moments.</p>
+            
+            <h3>🆓 Completely Free Song Finder</h3>
+            <p>Unlike many music identification apps that require subscriptions or have limited uses, Songlify is completely free. <strong>Identify unlimited songs</strong> without any restrictions or hidden fees.</p>
+            
+            <h3>🌐 No App Download Required</h3>
+            <p>Works directly in your web browser on any device. Whether you're on desktop, mobile, or tablet, you can <strong>find songs instantly</strong> without downloading or installing anything.</p>
+            
+            <h3>📊 Songlify vs. Other Music Identifiers</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Songlify</th>
+                        <th>Shazam</th>
+                        <th>SoundHound</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>No App Required</td>
+                        <td>✅ Browser-based</td>
+                        <td>❌ App required</td>
+                        <td>❌ App required</td>
+                    </tr>
+                    <tr>
+                        <td>File Upload</td>
+                        <td>✅ Multiple formats</td>
+                        <td>❌ Live recording only</td>
+                        <td>❌ Live recording only</td>
+                    </tr>
+                    <tr>
+                        <td>Completely Free</td>
+                        <td>✅ No limits</td>
+                        <td>✅ With ads</td>
+                        <td>⚠️ Limited free</td>
+                    </tr>
+                    <tr>
+                        <td>Privacy Focused</td>
+                        <td>✅ No account needed</td>
+                        <td>❌ Account required</td>
+                        <td>❌ Account required</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>🎯 Perfect for Music Lovers</h3>
+            <p>Whether you're a DJ looking to identify tracks, a music enthusiast discovering new songs, or someone trying to remember that tune from a commercial, Songlify is the perfect <strong>online song identifier</strong> for all your music discovery needs.</p>
+            
+            <h3>🔧 How It Works</h3>
+            <p>Our music recognition technology analyzes the audio fingerprint of your recording or uploaded file and compares it against a vast database of songs. The process takes just seconds and provides you with the song title, artist, album, and direct links to streaming services.</p>
+            
+            <p><strong>Ready to identify that song?</strong> Start recording or upload your audio file above and discover your music in seconds!</p>
+        </footer>
     </div>
 
     <script>
@@ -892,7 +1142,7 @@
                 this.results.scrollIntoView({ behavior: 'smooth' });
                 
                 if (song.isReal === false) {
-                    this.status.textContent = 'No Song Found!';
+                    this.status.textContent = 'Demo result shown - try with real music for actual identification!';
                 } else {
                     this.status.textContent = 'Song identified successfully!';
                 }
@@ -902,8 +1152,9 @@
                 const historyList = document.getElementById('historyList');
                 const historyItem = document.createElement('div');
                 historyItem.className = 'history-item';
+                historyItem.setAttribute('role', 'listitem');
                 historyItem.innerHTML = `
-                    <div class="history-art">♪</div>
+                    <div class="history-art" aria-hidden="true">♪</div>
                     <div>
                         <strong>${song.title}</strong><br>
                         <small>${song.artist} • ${song.album}</small>
